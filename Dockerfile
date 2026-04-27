@@ -1,17 +1,12 @@
-# Use Maven + Java 17 image
-FROM maven:3.9.6-eclipse-temurin-17
-
-# Set working directory
+# Build stage
+FROM maven:3.9.6-eclipse-temurin-17 AS builder
 WORKDIR /app
-
-# Copy project files
 COPY . .
-
-# Build the project
 RUN mvn clean package -DskipTests
 
-# Expose port (Render uses PORT env)
+# Run stage
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the jar
-CMD ["sh", "-c", "java -jar target/*.jar --server.port=$PORT"]
+CMD ["java", "-jar", "app.jar"]

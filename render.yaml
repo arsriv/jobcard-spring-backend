@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: jobcard-management
+    env: java
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: SMTP_EMAIL
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
